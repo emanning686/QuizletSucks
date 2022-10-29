@@ -6,12 +6,15 @@ from unittest import skip
 fileContinue = False
 
 while True:
-    action = input("Choose a task (CF create file, EF edit file, P practice, R reset): ")
-    if fileContinue and action.upper() != "CF" and action.upper() != "EF" and action.upper() != "P" and action.upper() != "R":
+    returnToStart = False
+    action = input("Choose a task (CF create file, EF edit file, P practice, R reset, Q quit): ")
+    if fileContinue and action.upper() != "CF" and action.upper() != "EF" and action.upper() != "P" and action.upper() != "R" and action.upper() != "Q":
         print("Bad Input")
         continue
-    if action.upper() == "CF":
+    elif action.upper() == "CF":
         fileName = input("What would you like to name your file?: ")
+    elif action.upper() == "Q":
+        exit()
     elif fileContinue:
         skip
     elif action.upper() == "EF" or action.upper() == "P":
@@ -23,17 +26,23 @@ while True:
         continue
 
     currentFile = f"{fileName}.txt"
-    try:
-        open(currentFile, "x")
-    except FileExistsError:
-        openExistingFile = input("File already exists, open it (Y yes, N no)")
-        if openExistingFile.upper() == "Y":
-            skip
-        elif openExistingFile.upper() == "N":
-            continue
-        else:
-            print("Bad Input")
-            continue
+
+    if action == "CF":
+        try:
+            open(currentFile, "x")
+        except FileExistsError:
+            while True:
+                openExistingFile = input("File already exists, open it (Y yes, N no)")
+                if openExistingFile.upper() == "N":
+                    returnToStart = True
+                    continue
+                elif openExistingFile.upper() != "Y":
+                    print("Bad Input")
+                    continue
+                break
+            if returnToStart:
+                continue
+    fileContinue = False
 
 
     with open(currentFile, "r") as file:
@@ -51,12 +60,19 @@ while True:
         
         if editAction.upper() == "A":
             while True:
+                cardExists = False
                 newCardFront = input('Type the card front (& to end, R to reset): ')
                 if newCardFront == "&":
                     fileContinue = True
                     break
-                if newCardFront.upper() == "R":
+                elif newCardFront.upper() == "R":
                     break
+                for card in currentSet:
+                    if newCardFront == card:
+                        print("This card already exists")
+                        cardExists = True
+                if cardExists:
+                    continue
                 newCardBack = input("Type the card back: ")
                 with open(currentFile, "a") as file:
                     if fileLength == 0:
@@ -88,3 +104,5 @@ while True:
                         else:
                             file.write(f"\n{card}|{currentSet[card]}")
                             fileLength += 1
+    if action.upper() == "P":
+        
