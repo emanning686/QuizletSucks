@@ -2,6 +2,8 @@
 # 10/25/2022
 
 from unittest import skip
+import time
+import random
 
 fileContinue = False
 
@@ -27,7 +29,7 @@ while True:
 
     currentFile = f"{fileName}.txt"
 
-    if action == "CF":
+    if action.upper() == "CF":
         try:
             open(currentFile, "x")
         except FileExistsError:
@@ -43,7 +45,6 @@ while True:
             if returnToStart:
                 continue
     fileContinue = False
-
 
     with open(currentFile, "r") as file:
         currentSet = {}
@@ -87,11 +88,11 @@ while True:
         elif editAction.upper() == "R":
             while True:
                 print(currentSet)
-                frontDelete = input('Which card (the front) would you like to delete (& to end, R to reset): ')
+                frontDelete = input('Which card (the front) would you like to delete? (& to end, R to reset): ')
                 if frontDelete == "&":
                     fileContinue = True
                     break
-                if frontDelete.upper() == "R":
+                elif frontDelete.upper() == "R":
                     break
                 del currentSet[frontDelete]
                 with open(currentFile, 'r+') as file:
@@ -104,5 +105,83 @@ while True:
                         else:
                             file.write(f"\n{card}|{currentSet[card]}")
                             fileLength += 1
-    if action.upper() == "P":
-        
+    elif action.upper() == "P":
+        practiceType = input("How would you like to practice? (FC flash cards, L learn, & to end, R to reset): ")
+        if practiceType == "&":
+            fileContinue = True
+            break
+        elif practiceType.upper() == "R":
+            break
+        elif practiceType.upper() == "FC":
+            newPracticeSet = {}
+            practiceSet = currentSet.copy()
+            originalPracticeSet = practiceSet.copy()
+            originalConcurrentPracticeSet = practiceSet.copy()
+            practiceFronts = list(practiceSet.keys())
+            practiceBacks = list(practiceSet.values())
+            round = 1
+            setShuffled = False
+            while True:
+                print(f"Round {round}")
+                time.sleep(1)
+                for i in range(3, 0, -1):
+                    print(i)
+                    time.sleep(.5)
+                print("Go!")
+                index = 0
+                printFront = True
+                while index < len(practiceFronts):
+                    if printFront:
+                        print(practiceFronts[index])
+                    else:
+                        print(practiceBacks[index])
+                    flashCardsAction = input("Press enter to flip, 1 for good stack, 2 for bad stack, R to shuffle, O to set to original order: ")
+                    if flashCardsAction == "2":
+                        practiceSet.pop(practiceFronts[index])
+                        originalPracticeSet.pop(practiceFronts[index])
+                        newPracticeSet.update({practiceFronts.pop(index): practiceBacks.pop(index)})
+                        printFront = True
+                        continue
+                    elif flashCardsAction == "1":
+                        practiceSet.pop(practiceFronts[index])
+                        originalPracticeSet.pop(practiceFronts[index])
+                        originalConcurrentPracticeSet.pop(practiceFronts[index])
+                        practiceFronts.pop(index)
+                        practiceBacks.pop(index)
+                        printFront = True
+                        continue
+                    elif flashCardsAction.upper() == "R":
+                        setShuffled = True
+                        random.shuffle(practiceFronts)
+                        shuffledPracticeSet = dict()
+                        for cardFront in practiceFronts:
+                            shuffledPracticeSet.update({cardFront: practiceSet[cardFront]})
+                        practiceSet = shuffledPracticeSet.copy()
+                        practiceFronts = list(practiceSet.keys())
+                        practiceBacks = list(practiceSet.values())
+                        printFront = True
+                        continue
+                    elif flashCardsAction.upper() == "O":
+                        setShuffled = False
+                        practiceSet = originalPracticeSet.copy()
+                        practiceFronts = list(practiceSet.keys())
+                        practiceBacks = list(practiceSet.values())
+                        printFront = True
+                        continue
+                    else:
+                        printFront = not printFront
+                        continue
+                newPracticeSet = {}
+                practiceSet = originalConcurrentPracticeSet.copy()
+                originalPracticeSet = originalConcurrentPracticeSet.copy()
+                practiceFronts = list(practiceSet.keys())
+                practiceBacks = list(practiceSet.values())
+                if setShuffled:
+                    random.shuffle(practiceFronts)
+                    shuffledPracticeSet = dict()
+                    for cardFront in practiceFronts:
+                        shuffledPracticeSet.update({cardFront: practiceSet[cardFront]})
+                    practiceSet = shuffledPracticeSet.copy()
+                    practiceFronts = list(practiceSet.keys())
+                    practiceBacks = list(practiceSet.values())
+                round += 1
