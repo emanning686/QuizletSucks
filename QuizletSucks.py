@@ -9,18 +9,18 @@ fileContinue = False
 
 while True:
     returnToStart = False
-    action = input("Choose a task (CF create file, EF edit file, P practice, R reset, Q quit): ")
+    action = input("\nChoose a task (CF create file, EF edit file, P practice, R reset, Q quit): ")
     if fileContinue and action.upper() != "CF" and action.upper() != "EF" and action.upper() != "P" and action.upper() != "R" and action.upper() != "Q":
         print("Bad Input")
         continue
     elif action.upper() == "CF":
-        fileName = input("What would you like to name your file?: ")
+        fileName = input("\nWhat would you like to name your file?: ")
     elif action.upper() == "Q":
         exit()
     elif fileContinue:
         skip
     elif action.upper() == "EF" or action.upper() == "P":
-        fileName = input("What file would you like to open?: ")
+        fileName = input("\nWhat file would you like to open?: ")
     elif action.upper() == "R":
         continue
     else:
@@ -34,10 +34,10 @@ while True:
             open(currentFile, "x")
         except FileExistsError:
             while True:
-                openExistingFile = input("File already exists, open it (Y yes, N no)")
+                openExistingFile = input("\nFile already exists, open it? (Y yes, N no): ")
                 if openExistingFile.upper() == "N":
                     returnToStart = True
-                    continue
+                    break
                 elif openExistingFile.upper() != "Y":
                     print("Bad Input")
                     continue
@@ -57,12 +57,12 @@ while True:
             currentSet[frontSide] = backSide
 
     if action.upper() == "EF":
-        editAction = input("Would you like to A add or R remove?: ")
+        editAction = input("\nWould you like to A add or R remove?: ")
         
         if editAction.upper() == "A":
             while True:
                 cardExists = False
-                newCardFront = input('Type the card front (& to end, R to reset): ')
+                newCardFront = input("\nType the card front (& to end, R to reset): ")
                 if newCardFront == "&":
                     fileContinue = True
                     break
@@ -74,7 +74,7 @@ while True:
                         cardExists = True
                 if cardExists:
                     continue
-                newCardBack = input("Type the card back: ")
+                newCardBack = input("\nType the card back: ")
                 with open(currentFile, "a") as file:
                     if fileLength == 0:
                         file.write(f"{newCardFront}|{newCardBack}")
@@ -88,7 +88,7 @@ while True:
         elif editAction.upper() == "R":
             while True:
                 print(currentSet)
-                frontDelete = input('Which card (the front) would you like to delete? (& to end, R to reset): ')
+                frontDelete = input("\nWhich card (the front) would you like to delete? (& to end, R to reset): ")
                 if frontDelete == "&":
                     fileContinue = True
                     break
@@ -106,52 +106,28 @@ while True:
                             file.write(f"\n{card}|{currentSet[card]}")
                             fileLength += 1
     elif action.upper() == "P":
-        practiceType = input("How would you like to practice? (FC flash cards, L learn, & to end, R to reset): ")
-        if practiceType == "&":
-            fileContinue = True
-            break
-        elif practiceType.upper() == "R":
-            break
-        elif practiceType.upper() == "FC":
-            newPracticeSet = {}
-            practiceSet = currentSet.copy()
-            originalPracticeSet = practiceSet.copy()
-            originalConcurrentPracticeSet = practiceSet.copy()
-            practiceFronts = list(practiceSet.keys())
-            practiceBacks = list(practiceSet.values())
-            round = 1
-            setShuffled = False
-            while True:
-                print(f"Round {round}")
-                time.sleep(1)
-                for i in range(3, 0, -1):
-                    print(i)
-                    time.sleep(.5)
-                print("Go!")
-                index = 0
-                printFront = True
-                while index < len(practiceFronts):
-                    if printFront:
-                        print(practiceFronts[index])
-                    else:
-                        print(practiceBacks[index])
-                    flashCardsAction = input("Press enter to flip, 1 for good stack, 2 for bad stack, R to shuffle, O to set to original order: ")
-                    if flashCardsAction == "2":
-                        practiceSet.pop(practiceFronts[index])
-                        originalPracticeSet.pop(practiceFronts[index])
-                        newPracticeSet.update({practiceFronts.pop(index): practiceBacks.pop(index)})
-                        printFront = True
-                        continue
-                    elif flashCardsAction == "1":
-                        practiceSet.pop(practiceFronts[index])
-                        originalPracticeSet.pop(practiceFronts[index])
-                        originalConcurrentPracticeSet.pop(practiceFronts[index])
-                        practiceFronts.pop(index)
-                        practiceBacks.pop(index)
-                        printFront = True
-                        continue
-                    elif flashCardsAction.upper() == "R":
-                        setShuffled = True
+        firstPraccyRun = True
+        setShuffled = False
+        while True:
+            if firstPraccyRun:
+                practiceType = input("\nHow would you like to practice? (FC flash cards, L learn, & to end, R to reset): ")
+            if practiceType == "&":
+                fileContinue = True
+                returnToStart = True
+                break
+            elif practiceType.upper() == "R":
+                returnToStart = True
+                break
+            elif practiceType.upper() == "FC":
+                newPracticeSet = {}
+                practiceSet = currentSet.copy()
+                originalPracticeSet = practiceSet.copy()
+                ConcurrentPracticeSet = practiceSet.copy()
+                practiceFronts = list(practiceSet.keys())
+                practiceBacks = list(practiceSet.values())
+                round = 0
+                while len(ConcurrentPracticeSet) > 0:
+                    if setShuffled:
                         random.shuffle(practiceFronts)
                         shuffledPracticeSet = dict()
                         for cardFront in practiceFronts:
@@ -159,29 +135,89 @@ while True:
                         practiceSet = shuffledPracticeSet.copy()
                         practiceFronts = list(practiceSet.keys())
                         practiceBacks = list(practiceSet.values())
-                        printFront = True
-                        continue
-                    elif flashCardsAction.upper() == "O":
-                        setShuffled = False
-                        practiceSet = originalPracticeSet.copy()
-                        practiceFronts = list(practiceSet.keys())
-                        practiceBacks = list(practiceSet.values())
-                        printFront = True
-                        continue
-                    else:
-                        printFront = not printFront
-                        continue
-                newPracticeSet = {}
-                practiceSet = originalConcurrentPracticeSet.copy()
-                originalPracticeSet = originalConcurrentPracticeSet.copy()
-                practiceFronts = list(practiceSet.keys())
-                practiceBacks = list(practiceSet.values())
-                if setShuffled:
-                    random.shuffle(practiceFronts)
-                    shuffledPracticeSet = dict()
-                    for cardFront in practiceFronts:
-                        shuffledPracticeSet.update({cardFront: practiceSet[cardFront]})
-                    practiceSet = shuffledPracticeSet.copy()
+                    round += 1
+                    print(f"\nRound {round}")
+                    time.sleep(1)
+                    for i in range(3, 0, -1):
+                        print(i)
+                        time.sleep(.5)
+                    print("Go!")
+                    printFront = True
+                    while len(practiceFronts) > 0:
+                        if printFront:
+                            print(f"\n{practiceFronts[0]}")
+                        else:
+                            print(f"\n{practiceBacks[0]}")
+                        flashCardsAction = input("Press enter to flip, 1 for good stack, 2 for bad stack, S to shuffle, O to set to original order, & to end, R to reset: ")
+                        if flashCardsAction == "2":
+                            practiceSet.pop(practiceFronts[0])
+                            originalPracticeSet.pop(practiceFronts[0])
+                            newPracticeSet.update({practiceFronts.pop(0): practiceBacks.pop(0)})
+                            printFront = True
+                            continue
+                        elif flashCardsAction == "1":
+                            practiceSet.pop(practiceFronts[0])
+                            originalPracticeSet.pop(practiceFronts[0])
+                            ConcurrentPracticeSet.pop(practiceFronts[0])
+                            practiceFronts.pop(0)
+                            practiceBacks.pop(0)
+                            printFront = True
+                            continue
+                        elif flashCardsAction.upper() == "S":
+                            setShuffled = True
+                            random.shuffle(practiceFronts)
+                            shuffledPracticeSet = dict()
+                            for cardFront in practiceFronts:
+                                shuffledPracticeSet.update({cardFront: practiceSet[cardFront]})
+                            practiceSet = shuffledPracticeSet.copy()
+                            practiceFronts = list(practiceSet.keys())
+                            practiceBacks = list(practiceSet.values())
+                            printFront = True
+                            continue
+                        elif flashCardsAction.upper() == "O":
+                            setShuffled = False
+                            practiceSet = originalPracticeSet.copy()
+                            practiceFronts = list(practiceSet.keys())
+                            practiceBacks = list(practiceSet.values())
+                            printFront = True
+                            continue
+                        elif flashCardsAction == "&":
+                            fileContinue = True
+                            returnToStart = True
+                            break
+                        elif flashCardsAction.upper() == "R":
+                            returnToStart = True
+                            break
+                        else:
+                            printFront = not printFront
+                            continue
+                    if returnToStart:
+                        break
+                    newPracticeSet = {}
+                    practiceSet = ConcurrentPracticeSet.copy()
+                    originalPracticeSet = ConcurrentPracticeSet.copy()
                     practiceFronts = list(practiceSet.keys())
                     practiceBacks = list(practiceSet.values())
-                round += 1
+                if returnToStart:
+                        break
+                useS = ""
+                if round > 1:
+                    useS = "s"
+                print(f"\nYou learned all the cards!\nThis time it took you {round} round{useS},\nshoot for less than {round} next time!")
+                while True:
+                    flashCardsAgain = input("Would you like to run these flash cards again? (Y yes, P to choose a different practice mode, & to end, R to reset): ")
+                    firstPraccyRun = True
+                    if flashCardsAgain.upper() == "Y":
+                        firstPraccyRun = False
+                        break
+                    elif flashCardsAgain.upper() == "P":
+                        break
+                    elif flashCardsAgain == "&":
+                        fileContinue = True
+                        returnToStart = True
+                        break
+                    elif flashCardsAgain.upper() == "R":
+                        returnToStart = True
+                        break
+                if returnToStart:
+                    break
