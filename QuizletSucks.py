@@ -6,29 +6,34 @@ from curses import wrapper
 from curses.textpad import rectangle
 import time
 import os
+from subprocess import call
 
 # define variables
 
-tempFileList = os.listdir()
+tempFileList = os.listdir("Sets/")
 fileList = []
-tempPage = 0
-for index, file in enumerate(tempFileList):
-    if file[len(file) - 3:] != "txt":
-        tempFileList.pop(index)
-for index, file in enumerate(tempFileList):
-    tempFileList[index] = file[:-4]
-for index, file in enumerate(tempFileList):
-    if index % 6 == 0:
-        if index > 1:
-            tempPage += 1
-        fileList.append([])
-    fileList[tempPage].append(file)
+
+# update file list function
+def updateFileList():
+    global fileList
+    for index, file in enumerate(tempFileList):
+        if file[len(file) - 3:] != "txt":
+            tempFileList.pop(index)
+    for index, file in enumerate(tempFileList):
+        tempFileList[index] = file[:-4]
+    tempPage = 0
+    for index, file in enumerate(tempFileList):
+        if index % 6 == 0:
+            if index > 1:
+                tempPage += 1
+            fileList.append([])
+        fileList[tempPage].append(file)
 
 page = 1
 selected = 1
 
 # draw level menu function
-def drawLevelMenu(stdscr):
+def drawFileMenu(stdscr):
     magenta = curses.color_pair(1)
     cyan = curses.color_pair(2)
     yellow = curses.color_pair(3)
@@ -37,14 +42,14 @@ def drawLevelMenu(stdscr):
     centerRow = curses.LINES // 2
     centerCol = curses.COLS // 2
 
-    boxTL = (centerRow - 14, centerCol - 39)
-    boxBR = (centerRow + 14, centerCol + 39)
+    boxTL = (centerRow - 14, centerCol - 38)
+    boxBR = (centerRow + 14, centerCol + 38)
 
     stdscr.clear()
 
     rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
 
-    text = "Chose a file:"
+    text = "Choose a file:"
     stdscr.addstr(centerRow - 11, centerCol - len(text) // 2, text, white)
     text = f"Page {page}"
     stdscr.addstr(centerRow + 7, centerCol - len(text) // 2, text, white)
@@ -67,14 +72,15 @@ def drawLevelMenu(stdscr):
             stdscr.addstr(centerRow - 2, centerCol + 21 - len(text) // 2, text, color)
         elif index == 5:
             stdscr.addstr(centerRow + 3, centerCol + 21 - len(text) // 2, text, color)
-    stdscr.refresh()
     if selected == 7:
         color = yellow
     else:
         color = cyan
     text = "Create new file"
     stdscr.addstr(centerRow + 11, centerCol - len(text) // 2, text, color)
+    stdscr.refresh()
 
+# move cursor function
 def moveCursor(dir):
     global selected, page
     if dir == "up" and selected != 1 and selected != 4:
@@ -156,6 +162,78 @@ def moveCursor(dir):
     if selected > len(fileList[page - 1]):
             selected = 7
 
+# draw create new file menu funciton
+def drawCNFMenu(stdscr, fileName):
+    magenta = curses.color_pair(1)
+    cyan = curses.color_pair(2)
+    yellow = curses.color_pair(3)
+    white = curses.color_pair(4)
+
+    centerRow = curses.LINES // 2
+    centerCol = curses.COLS // 2
+
+    boxTL = (centerRow - 7, centerCol - 19)
+    boxBR = (centerRow + 7, centerCol + 19)
+
+    textBoxTL = (centerRow - 1, centerCol - 18)
+    textBoxBR = (centerRow + 1, centerCol + 18)
+
+    stdscr.clear()
+
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, textBoxTL[0], textBoxTL[1], textBoxBR[0], textBoxBR[1])
+
+    stdscr.addstr(centerRow, centerCol - (len(fileName) + 5) // 2, f"{fileName} .txt", yellow)
+    stdscr.addstr(centerRow, centerCol - (len(fileName) + 5) // 2, fileName, magenta)
+
+    text = "Type file name"
+    stdscr.addstr(centerRow - 4, centerCol - len(text) // 2, text, white)
+
+    text = "exit (esc)"
+    stdscr.addstr(centerRow + 4, centerCol - 10 - len(text) // 2, text, white)
+
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 4, centerCol + 10 - len(text) // 2, text, white)
+
+    stdscr.refresh()
+
+# select item function
+def selectItem(stdscr):
+    chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
+            "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "@", "#", 
+            "$", "%", "^", "&", "*", "-", "_", "=", "+", "<", ">", "~", " "]
+    
+    if selected == 7:
+        fileName = ""
+        while True:
+            drawCNFMenu(stdscr, fileName)
+            input = stdscr.getch()
+            char = chr(input)
+            if char in chars and len(fileName) < 30:
+                fileName += char
+            elif char == "\x7f":
+                fileName = fileName[:-1]
+            elif char == "\n":
+                f = open(f"Sets/{fileName}.txt", "x")
+                f.close()
+                break
+            elif input == 27:
+                break
+    else:
+        setFileLines = []
+        fileName = f"{fileList[page - 1][selected - 1]}.txt"
+        with open(f"Sets/{fileName}", "r") as file:
+            for line in file:
+                setFileLines.append(line)
+        with open("CurrentSet.txt", "w") as file:
+            file.write(f"{fileName}\n")
+            for line in setFileLines:
+                file.write(line)
+        call(["python", "ChooseMode.py"])
+
 # main function
 def main(stdscr):
     curses.init_pair(1, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
@@ -214,8 +292,10 @@ def main(stdscr):
     stdscr.refresh()
     time.sleep(1)
 
+    updateFileList()
+
     while True:
-        drawLevelMenu(stdscr)
+        drawFileMenu(stdscr)
         key = stdscr.getch()
         if key == curses.KEY_UP:
             moveCursor("up")
@@ -225,5 +305,9 @@ def main(stdscr):
             moveCursor("left")
         elif key == curses.KEY_RIGHT:
             moveCursor("right")
+        elif key == ord(" "):
+            selectItem(stdscr)
+        elif input == 27:
+            break
 
 wrapper(main)
