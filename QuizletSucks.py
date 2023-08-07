@@ -8,14 +8,11 @@ import time
 import os
 from subprocess import call
 
-# define variables
-
-tempFileList = os.listdir("Sets/")
-fileList = []
-
 # update file list function
 def updateFileList():
     global fileList
+    fileList = []
+    tempFileList = os.listdir("Sets/")
     for index, file in enumerate(tempFileList):
         if file[len(file) - 3:] != "txt":
             tempFileList.pop(index)
@@ -81,7 +78,7 @@ def drawFileMenu(stdscr):
     stdscr.refresh()
 
 # move cursor function
-def moveCursor(dir):
+def moveCursor(dir, stdscr):
     global selected, page
     if dir == "up" and selected != 1 and selected != 4:
         if selected == 7:
@@ -103,30 +100,12 @@ def moveCursor(dir):
         if selected == 1 and page > 1:
             page -= 1
             selected = 4
-            if len(fileList[page - 1]) < 4:
-                selected = 1
         elif selected == 2 and page > 1:
             page -= 1
             selected = 5
-            if len(fileList[page - 1]) < 5:
-                selected = 4
-            elif len(fileList[page - 1]) < 4:
-                selected = 2
-            elif len(fileList[page - 1]) < 2:
-                selected = 1
         elif selected == 3 and page > 1:
             page -= 1
             selected = 6
-            if len(fileList[page - 1]) < 6:
-                selected = 5
-            elif len(fileList[page - 1]) < 5:
-                selected = 4
-            elif len(fileList[page - 1]) < 4:
-                selected = 3
-            elif len(fileList[page - 1]) < 3:
-                selected = 2
-            elif len(fileList[page - 1]) < 2:
-                selected = 1
         elif selected == 4:
             selected = 1
         elif selected == 5:
@@ -219,6 +198,7 @@ def selectItem(stdscr):
             elif char == "\n":
                 f = open(f"Sets/{fileName}.txt", "x")
                 f.close()
+                updateFileList()
                 break
             elif input == 27:
                 break
@@ -298,16 +278,16 @@ def main(stdscr):
         drawFileMenu(stdscr)
         key = stdscr.getch()
         if key == curses.KEY_UP:
-            moveCursor("up")
+            moveCursor("up", stdscr)
         elif key == curses.KEY_DOWN:
-            moveCursor("down")
+            moveCursor("down", stdscr)
         elif key == curses.KEY_LEFT:
-            moveCursor("left")
+            moveCursor("left", stdscr)
         elif key == curses.KEY_RIGHT:
-            moveCursor("right")
+            moveCursor("right", stdscr)
         elif key == ord(" "):
             selectItem(stdscr)
-        elif input == 27:
-            break
+        elif key == 27:
+            exit()
 
 wrapper(main)
