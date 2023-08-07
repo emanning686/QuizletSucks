@@ -1,30 +1,22 @@
+from textwrap import wrap
 
-import curses
-from curses import wrapper
-from curses.textpad import rectangle
-import time
-import os
-from subprocess import call
+currentCard = 0
 
-# define variables
-fileList = []
+cardSet = []
+homeFilename = ""
+def createCardSet():
+    global cardSet, homeFileName
+    with open("CurrentSet.txt", "r") as file:
+        homeFileName = file.readline().replace("\n", "")
+        for line in file:
+            card = line.replace("\n", "").split("|")
+            cardSet.append(card)
 
-# update file list function
-def updateFileList():
-    global fileList
-    tempFileList = os.listdir("Sets/")
-    for index, file in enumerate(tempFileList):
-        if file[len(file) - 3:] != "txt":
-            tempFileList.pop(index)
-    for index, file in enumerate(tempFileList):
-        tempFileList[index] = file[:-4]
-    tempPage = 0
-    for index, file in enumerate(tempFileList):
-        if index % 6 == 0:
-            if index > 1:
-                tempPage += 1
-            fileList.append([])
-        fileList[tempPage].append(file)
+createCardSet()
 
-updateFileList()
-print(len(fileList))
+newTextList1 = []
+newTextList2 = []
+cardFront = str(cardSet[currentCard][0][:130])
+newTextList1 = wrap(cardFront, 28)
+
+print(newTextList1)

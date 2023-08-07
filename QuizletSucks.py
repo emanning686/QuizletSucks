@@ -44,12 +44,17 @@ def drawFileMenu(stdscr):
 
     stdscr.clear()
 
-    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
-
     text = "Choose a file:"
     stdscr.addstr(centerRow - 11, centerCol - len(text) // 2, text, white)
+
     text = f"Page {page}"
     stdscr.addstr(centerRow + 7, centerCol - len(text) // 2, text, white)
+
+    text = "exit (esc)"
+    stdscr.addstr(centerRow + 12, centerCol - 30 - len(text) // 2, text, white)
+
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 12, centerCol + 30 - len(text) // 2, text, white)
 
     for index, file in enumerate(fileList[page - 1]):
         if index + 1 == selected:
@@ -73,12 +78,16 @@ def drawFileMenu(stdscr):
         color = yellow
     else:
         color = cyan
+
     text = "Create new file"
     stdscr.addstr(centerRow + 11, centerCol - len(text) // 2, text, color)
+
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+
     stdscr.refresh()
 
 # move cursor function
-def moveCursor(dir, stdscr):
+def moveCursor(dir):
     global selected, page
     if dir == "up" and selected != 1 and selected != 4:
         if selected == 7:
@@ -89,14 +98,14 @@ def moveCursor(dir, stdscr):
                 selected = 1   
         else:
             selected -= 1
-    if dir == "down" and selected != 7:
+    elif dir == "down" and selected != 7:
         if selected < 3:
             selected += 1
         elif selected == 3:
             selected = 7
         else:
             selected += 1
-    if dir == "left":
+    elif dir == "left":
         if selected == 1 and page > 1:
             page -= 1
             selected = 4
@@ -114,7 +123,7 @@ def moveCursor(dir, stdscr):
             selected = 3
         elif selected == 7 and page > 1:
             page -= 1
-    if dir == "right":
+    elif dir == "right":
         if selected == 1:
             selected = 4
         elif selected == 2:
@@ -159,7 +168,6 @@ def drawCNFMenu(stdscr, fileName):
 
     stdscr.clear()
 
-    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
     rectangle(stdscr, textBoxTL[0], textBoxTL[1], textBoxBR[0], textBoxBR[1])
 
     stdscr.addstr(centerRow, centerCol - (len(fileName) + 5) // 2, f"{fileName} .txt", yellow)
@@ -169,10 +177,12 @@ def drawCNFMenu(stdscr, fileName):
     stdscr.addstr(centerRow - 4, centerCol - len(text) // 2, text, white)
 
     text = "exit (esc)"
-    stdscr.addstr(centerRow + 4, centerCol - 10 - len(text) // 2, text, white)
+    stdscr.addstr(centerRow + 4, centerCol - 11 - len(text) // 2, text, white)
 
     text = "accept (enter)"
-    stdscr.addstr(centerRow + 4, centerCol + 10 - len(text) // 2, text, white)
+    stdscr.addstr(centerRow + 4, centerCol + 11 - len(text) // 2, text, white)
+
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
 
     stdscr.refresh()
 
@@ -189,8 +199,8 @@ def selectItem(stdscr):
         fileName = ""
         while True:
             drawCNFMenu(stdscr, fileName)
-            input = stdscr.getch()
-            char = chr(input)
+            key = stdscr.getch()
+            char = chr(key)
             if char in chars and len(fileName) < 30:
                 fileName += char
             elif char == "\x7f":
@@ -200,7 +210,7 @@ def selectItem(stdscr):
                 f.close()
                 updateFileList()
                 break
-            elif input == 27:
+            elif key == 27:
                 break
     else:
         setFileLines = []
@@ -213,6 +223,7 @@ def selectItem(stdscr):
             for line in setFileLines:
                 file.write(line)
         call(["python", "ChooseMode.py"])
+        exit()
 
 # main function
 def main(stdscr):
@@ -278,14 +289,14 @@ def main(stdscr):
         drawFileMenu(stdscr)
         key = stdscr.getch()
         if key == curses.KEY_UP:
-            moveCursor("up", stdscr)
+            moveCursor("up")
         elif key == curses.KEY_DOWN:
-            moveCursor("down", stdscr)
+            moveCursor("down")
         elif key == curses.KEY_LEFT:
-            moveCursor("left", stdscr)
+            moveCursor("left")
         elif key == curses.KEY_RIGHT:
-            moveCursor("right", stdscr)
-        elif key == ord(" "):
+            moveCursor("right") 
+        elif chr(key) == "\n":
             selectItem(stdscr)
         elif key == 27:
             exit()
