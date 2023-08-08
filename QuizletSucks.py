@@ -6,6 +6,7 @@ from curses import wrapper
 from curses.textpad import rectangle
 import time
 import os
+import sys
 from subprocess import call
 
 # update file list function
@@ -299,6 +300,6 @@ def main(stdscr):
         elif chr(key) == "\n":
             selectItem(stdscr)
         elif key == 27:
-            exit()
+            sys.exit()
 
 wrapper(main)

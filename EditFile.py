@@ -30,6 +30,23 @@ def createCardSet():
             card = line.replace("\n", "").split("|")
             cardSet.append(card)
 
+# save set function
+def saveSet():
+    global cardSet, homeFileName
+
+    setFileLines = []
+    fileLoc = f"Sets/{homeFileName}"
+    with open(fileLoc, "w") as file:
+        for i in cardSet:
+            file.write(f"{i[0]}|{i[1]}\n")
+    with open(fileLoc, "r") as file:
+        for line in file:
+                setFileLines.append(line)
+    with open("CurrentSet.txt", "w") as file:
+        file.write(f"{homeFileName}\n")
+        for line in setFileLines:
+            file.write(line)
+
 # draw hud function
 def drawHUD(stdscr):
     magenta = curses.color_pair(1)
@@ -49,8 +66,12 @@ def drawHUD(stdscr):
     rectangle(stdscr, centerRow + 12, centerCol - 40, centerRow + 14, centerCol - 34)
 
     text = "space  -> Create new card"
+    stdscr.addstr(centerRow + 10, centerCol + 30 - len(text) // 2, text, white)
+    rectangle(stdscr, centerRow + 9, centerCol + 17, centerRow + 11, centerCol + 23)
+
+    text = "escape  -> Save and exit"
     stdscr.addstr(centerRow + 13, centerCol + 30 - len(text) // 2, text, white)
-    rectangle(stdscr, centerRow + 12, centerCol + 17, centerRow + 14, centerCol + 23)
+    rectangle(stdscr, centerRow + 12, centerCol + 17, centerRow + 14, centerCol + 24)
 
 # draw cards menu function
 def drawCardsScreen(stdscr, action):
@@ -1191,7 +1212,10 @@ def createNewCard(stdscr):
                 break
 
     stdscr.clear()
-    text = "Type card front"
+    if getCardBack == False:
+        text = "Type card front"
+    else:
+        text = "Type card front"
     stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
     text = "exit (escape)"
     stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
@@ -1208,7 +1232,10 @@ def createNewCard(stdscr):
         if currentLine <= 2:
             stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
             currentLine += 1
-    text = "Type card front"
+    if getCardBack == False:
+        text = "Type card front"
+    else:
+        text = "Type card front"
     stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
     text = "exit (escape)"
     stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
@@ -1303,13 +1330,14 @@ def main(stdscr):
             moveCard(stdscr, "left")
         elif key == curses.KEY_RIGHT:
             moveCard(stdscr, "right")
-        elif key == curses.KEY_UP or key == ord("f"):
+        elif key == curses.KEY_UP or key == curses.KEY_DOWN or key == ord("f"):
             flipCard(stdscr)
         elif key == ord(" "):
             createNewCard(stdscr)
         elif chr(key) == "\n":
             pass
         elif key == 27:
-            exit()
+            saveSet()
+            call(["python", "ChooseMode.py"])
 
 wrapper(main)

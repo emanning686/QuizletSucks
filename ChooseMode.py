@@ -103,6 +103,6 @@ def main(stdscr):
         elif chr(key) == "\n":
             selectItem()
         elif key == 27:
-            exit()
+            call(["python", "QuizletSucks.py"])
 
 wrapper(main)
