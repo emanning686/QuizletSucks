@@ -72,8 +72,8 @@ def drawCardsScreen(stdscr, action):
     try:
         cardFront = str(cardSet[currentCard][0][:130])
         cardBack = str(cardSet[currentCard][1][:130])
-        newTextList1 = wrap(cardFront, 28)
-        newTextList2 = wrap(cardBack, 28)
+        newTextList1 = wrap(cardFront, 27)
+        newTextList2 = wrap(cardBack, 27)
     except IndexError:
         newTextList1 = ["", "Create new card", "", "+"]
         newTextList2 = ["", "Create new card", "", "+"]
@@ -372,9 +372,9 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in newCardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 15 - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 16 - len(i) // 2, i, color)
                     currentLine += 1
-            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 15, boxBR[0], boxBR[1] + curses.COLS // 2 - 15)
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 16, boxBR[0], boxBR[1] + curses.COLS // 2 - 16)
 
             currentLine = -2
             for i in cardSides[currentSide]:
@@ -473,9 +473,9 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in cardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 2 + 15 - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 2 + 16 - len(i) // 2, i, color)
                     currentLine += 1
-            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 2 + 15, boxBR[0], boxBR[1] - curses.COLS // 2 + 15)
+            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 2 + 16, boxBR[0], boxBR[1] - curses.COLS // 2 + 16)
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
@@ -494,9 +494,9 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in newCardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 2 + 15 - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 2 + 16 - len(i) // 2, i, color)
                     currentLine += 1
-            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 2 + 15, boxBR[0], boxBR[1] - curses.COLS // 2 + 15)
+            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 2 + 16, boxBR[0], boxBR[1] - curses.COLS // 2 + 16)
 
             currentLine = -2
             for i in cardSides[currentSide]:
@@ -595,9 +595,9 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in cardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 15 - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 16 - len(i) // 2, i, color)
                     currentLine += 1
-            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 15, boxBR[0], boxBR[1] + curses.COLS // 2 - 15)
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 16, boxBR[0], boxBR[1] + curses.COLS // 2 - 16)
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
@@ -616,9 +616,9 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in newCardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 15 - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 16 - len(i) // 2, i, color)
                     currentLine += 1
-            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 15, boxBR[0], boxBR[1] + curses.COLS // 2 - 15)
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 16, boxBR[0], boxBR[1] + curses.COLS // 2 - 16)
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
@@ -700,12 +700,587 @@ def flipCard(stdscr):
         currentSide = 0
     drawCardsScreen(stdscr, "flip")
 
+# draw new card function
+def drawNewCard(stdscr, text, side):
+    magenta = curses.color_pair(1)
+    cyan = curses.color_pair(2)
+    yellow = curses.color_pair(3)
+    white = curses.color_pair(4)
+
+    centerRow = curses.LINES // 2
+    centerCol = curses.COLS // 2
+
+    boxTL = (centerRow - 4, centerCol - 15)
+    boxBR = (centerRow + 4, centerCol + 15)
+
+    textList = wrap(text, 27)
+
+    stdscr.clear()
+    if side == "front":
+        text = "Type card front"
+    else:
+        text = "Type card back"
+    stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
+    text = "exit (escape)"
+    stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 6 , centerCol + 14 - len(text) // 2, text, white)
+
+    currentLine = -2
+    for i in textList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, magenta)
+            currentLine += 1
+
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 4, boxTL[1] - 8, boxBR[0] + 4, boxBR[1] + 8)
+    stdscr.refresh()
+
 # create new card function
 def createNewCard(stdscr):
-    cardsLeft = len(cardSet) - 1 - currentCard
+    global currentCard, displayedCard, cardSet, currentSide, textList1, textList2
+
+    magenta = curses.color_pair(1)
+    cyan = curses.color_pair(2)
+    yellow = curses.color_pair(3)
+    white = curses.color_pair(4)
+
+    centerRow = curses.LINES // 2
+    centerCol = curses.COLS // 2
+
+    boxTL = (centerRow - 4, centerCol - 15)
+    boxBR = (centerRow + 4, centerCol + 15)
+
+    cardsLeft = len(cardSet) - currentCard
+
+    if currentSide == 0:
+        color = cyan
+    else:
+        color = yellow
 
     if cardsLeft != 0:
-    
+        if currentCard != len(cardSet) - 1:
+            cardString = str(cardSet[currentCard][currentSide][:130])
+            cardStringList = wrap(cardString, 27)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - 3  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - 3, boxBR[0], boxBR[1] +- 3)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear() 
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - 6  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - 6, boxBR[0], boxBR[1] - 6)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear() 
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - 12  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - 12, boxBR[0], boxBR[1] - 12)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 4 + 15 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 4 + 15, boxBR[0], boxBR[1] - curses.COLS // 4 + 15)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 2 + 16 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 2 + 16, boxBR[0], boxBR[1] - curses.COLS // 2 + 16)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+            currentCard += 1
+        
+            while currentCard != len(cardSet):
+                cardString = str(cardSet[currentCard][currentSide][:130])
+                cardStringList = wrap(cardString, 27)
+
+                stdscr.clear()
+                currentLine = -2
+                for i in cardStringList:
+                    if currentLine <= 2:
+                        stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 3 - 16 - len(i) // 2, i, color)
+                        currentLine += 1
+                rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 3 - 16, boxBR[0], boxBR[1] + curses.COLS // 3 - 16)
+                drawHUD(stdscr)
+                stdscr.refresh()
+                time.sleep(sleepAmount)
+
+                stdscr.clear()
+                currentLine = -2
+                for i in cardStringList:
+                    if currentLine <= 2:
+                        stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+                        currentLine += 1
+                rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+                drawHUD(stdscr)
+                stdscr.refresh()
+                time.sleep(sleepAmount)
+
+                stdscr.clear()
+                currentLine = -2
+                for i in cardStringList:
+                    if currentLine <= 2:
+                        stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 3 + 16 - len(i) // 2, i, color)
+                        currentLine += 1
+                rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 3 + 16, boxBR[0], boxBR[1] - curses.COLS // 3 + 16)
+                drawHUD(stdscr)
+                stdscr.refresh()
+                time.sleep(sleepAmount)
+
+                stdscr.clear()
+                stdscr.refresh()
+
+                currentCard += 1
+
+            cardStringList = ["", "Create new card", "", "+"]
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 16 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 16, boxBR[0], boxBR[1] + curses.COLS // 2 - 16)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 4 - 15 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 4 - 15, boxBR[0], boxBR[1] + curses.COLS // 4 - 15)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear() 
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + 12  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + 12, boxBR[0], boxBR[1] + 12)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear() 
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + 6  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + 6, boxBR[0], boxBR[1] + 6)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + 3  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + 3, boxBR[0], boxBR[1] + 3)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+            drawHUD(stdscr)
+            stdscr.refresh()
+        else:
+            cardString = str(cardSet[currentCard][currentSide][:130])
+            cardStringList = wrap(cardString, 27)
+            newCardCard = ["", "Create new card", "", "+"]
+
+            stdscr.clear()
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 2 - 16 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 2 - 16, boxBR[0], boxBR[1] + curses.COLS // 2 - 16)
+
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + curses.COLS // 4 - 15 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + curses.COLS // 4 - 15, boxBR[0], boxBR[1] + curses.COLS // 4 - 15)
+
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - 3  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - 3, boxBR[0], boxBR[1] - 3)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear() 
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - 6  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - 6, boxBR[0], boxBR[1] - 6)
+            for i in range(7):
+                stdscr.addstr(centerRow + 3 - i, centerCol - 3, "             ", white)
+
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + 12  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + 12, boxBR[0], boxBR[1] + 12)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear() 
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - 12  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - 12, boxBR[0], boxBR[1] - 12)
+            for i in range(7):
+                stdscr.addstr(centerRow + 3 - i, centerCol - 9, "             ", white)
+
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + 6  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + 6, boxBR[0], boxBR[1] + 6)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol + 3  - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] + 3, boxBR[0], boxBR[1] + 3)
+
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 4 + 15 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 4 + 15, boxBR[0], boxBR[1] - curses.COLS // 4 + 15)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+
+            currentLine = -2
+            for i in cardStringList:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - curses.COLS // 2 + 16 - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1] - curses.COLS // 2 + 16, boxBR[0], boxBR[1] - curses.COLS // 2 + 16)
+            drawHUD(stdscr)
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+            stdscr.clear()
+            currentLine = -2
+            for i in newCardCard:
+                if currentLine <= 2:
+                    stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+                    currentLine += 1
+            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+            drawHUD(stdscr)
+            stdscr.refresh()
+
+    cardStringList = ["", "Create new card", "", "+"]
+
+    time.sleep(sleepAmount * 4)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] - 1, boxTL[1], boxBR[0] + 1, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 2, boxTL[1], boxBR[0] + 2, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount * 2)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 2, boxTL[1] - 2, boxBR[0] + 2, boxBR[1] + 2)
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 2, boxTL[1] - 4, boxBR[0] + 2, boxBR[1] + 4)
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount * 2)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    text = "Type card front"
+    stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
+    text = "exit (escape)"
+    stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 6 , centerCol + 14 - len(text) // 2, text, white)
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 3, boxTL[1] - 6, boxBR[0] + 3, boxBR[1] + 6)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    text = "Type card front"
+    stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
+    text = "exit (escape)"
+    stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 6 , centerCol + 14 - len(text) // 2, text, white)
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 4, boxTL[1] - 8, boxBR[0] + 4, boxBR[1] + 8)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
+            "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "@", "#", 
+            "$", "%", "^", "&", "*", "-", "_", "=", "+", "<", ">", "~", ",",
+            ".", " "]
+
+    cardFront = ""
+    cardBack = ""
+    getCardBack = False
+    while True:
+        drawNewCard(stdscr, cardFront, "front")
+        key = stdscr.getch()
+        char = chr(key)
+        if char in chars and len(cardFront) < 130:
+            cardFront += char
+        elif char == "\x7f":
+            cardFront = cardFront[:-1]
+        elif char == "\n":
+            if len(cardFront) != 0:
+                getCardBack = True
+                break
+        elif key == 27:
+            break
+
+    if getCardBack:
+        while True:
+            drawNewCard(stdscr, cardBack, "back")
+            key = stdscr.getch()
+            char = chr(key)
+            if char in chars and len(cardBack) < 130:
+                cardBack += char
+            elif char == "\x7f":
+                cardBack = cardBack[:-1]
+            elif char == "\n":
+                if len(cardBack) != 0:
+                    cardSet.append(list([cardFront, cardBack]))
+                    break
+            elif key == 27:
+                break
+
+    stdscr.clear()
+    text = "Type card front"
+    stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
+    text = "exit (escape)"
+    stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 6 , centerCol + 14 - len(text) // 2, text, white)
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 4, boxTL[1] - 8, boxBR[0] + 4, boxBR[1] + 8)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    text = "Type card front"
+    stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
+    text = "exit (escape)"
+    stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 6 , centerCol + 14 - len(text) // 2, text, white)
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 3, boxTL[1] - 6, boxBR[0] + 3, boxBR[1] + 6)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 2, boxTL[1] - 4, boxBR[0] + 2, boxBR[1] + 4)
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount * 2)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 2, boxTL[1] - 2, boxBR[0] + 2, boxBR[1] + 2)
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    rectangle(stdscr, boxTL[0] - 2, boxTL[1], boxBR[0] + 2, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount * 2)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] - 1, boxTL[1], boxBR[0] + 1, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+
+    currentCard = len(cardSet)
+    displayedCard = int(currentCard)
+    textList1 = ["", "Create new card", "", "+"]
+    textList2 = ["", "Create new card", "", "+"]
+
 
 # main function
 def main(stdscr):
@@ -730,8 +1305,10 @@ def main(stdscr):
             moveCard(stdscr, "right")
         elif key == curses.KEY_UP or key == ord("f"):
             flipCard(stdscr)
-        elif chr(key) == "\n":
+        elif key == ord(" "):
             createNewCard(stdscr)
+        elif chr(key) == "\n":
+            pass
         elif key == 27:
             exit()
 
