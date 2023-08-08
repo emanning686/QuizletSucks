@@ -24,6 +24,7 @@ homeFileName = ""
 # create card set function
 def createCardSet():
     global cardSet, homeFileName
+
     with open("CurrentSet.txt", "r") as file:
         homeFileName = file.readline().replace("\n", "")
         for line in file:
@@ -705,6 +706,7 @@ def drawCardsScreen(stdscr, action):
 # move card funciton
 def moveCard(stdscr, dir):
     global currentCard
+
     if dir == "left" and currentCard > 0:
         currentCard -= 1
         drawCardsScreen(stdscr, "move")
@@ -715,6 +717,7 @@ def moveCard(stdscr, dir):
 # flip card function
 def flipCard(stdscr):
     global currentSide
+
     if currentSide == 0:
         currentSide = 1
     else:
@@ -1215,7 +1218,7 @@ def createNewCard(stdscr):
     if getCardBack == False:
         text = "Type card front"
     else:
-        text = "Type card front"
+        text = "Type card back"
     stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
     text = "exit (escape)"
     stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
@@ -1235,7 +1238,7 @@ def createNewCard(stdscr):
     if getCardBack == False:
         text = "Type card front"
     else:
-        text = "Type card front"
+        text = "Type card back"
     stdscr.addstr(centerRow - 6 , centerCol - len(text) // 2, text, white)
     text = "exit (escape)"
     stdscr.addstr(centerRow + 6 , centerCol - 14 - len(text) // 2, text, white)
@@ -1308,6 +1311,246 @@ def createNewCard(stdscr):
     textList1 = ["", "Create new card", "", "+"]
     textList2 = ["", "Create new card", "", "+"]
 
+# delete card function
+def deleteCard(stdscr):
+    global currentCard, cardSet
+    cardSet.pop(currentCard)
+    drawCardsScreen(stdscr, "move")
+
+# draw edit card function
+def drawEditCard(stdscr, oldText, text):
+    global cardSet, currentCard, currentSide
+    magenta = curses.color_pair(1)
+    cyan = curses.color_pair(2)
+    yellow = curses.color_pair(3)
+    white = curses.color_pair(4)
+
+    centerRow = curses.LINES // 2
+    centerCol = curses.COLS // 2
+
+    boxTL = (centerRow - 4, centerCol - 15)
+    boxBR = (centerRow + 4, centerCol + 15)
+
+    textList = wrap(text, 27)
+
+    stdscr.clear()
+
+    stdscr.addstr(centerRow - 3, boxTL[1] + 2, "|                         |", white)
+    stdscr.addstr(centerRow - 2, boxTL[1] + 2, "|                         |", white)
+    stdscr.addstr(centerRow - 1, boxTL[1] + 2, "˅                         ˅", white)
+
+    if currentSide == 0:
+        text = "Type new card front"
+        color = cyan
+    else:
+        text = "Type new card back"
+        color = yellow
+    stdscr.addstr(centerRow - 2 , centerCol - len(text) // 2, text, white)
+
+    cardString = oldText
+    cardStringList = wrap(cardString, 27)
+
+    currentLine = -11
+    for i in cardStringList:
+        stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, magenta)
+        currentLine += 1
+
+    text = "exit (escape)"
+    stdscr.addstr(centerRow + 11 , centerCol - 14 - len(text) // 2, text, white)
+    text = "accept (enter)"
+    stdscr.addstr(centerRow + 11 , centerCol + 14 - len(text) // 2, text, white)
+
+    currentLine = 3
+    for i in textList:
+        stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, magenta)
+        currentLine += 1
+
+    rectangle(stdscr, boxTL[0] + 5, boxTL[1], boxBR[0] + 5, boxBR[1])
+    rectangle(stdscr, boxTL[0] - 9, boxTL[1], boxBR[0] - 9, boxBR[1])
+    rectangle(stdscr, boxTL[0] - 12, boxTL[1] - 7, boxBR[0] + 8, boxBR[1] + 7)
+
+# edit card function
+def editCard(stdscr):
+    global currentCard, displayedCard, cardSet, currentSide, textList1, textList2
+
+    magenta = curses.color_pair(1)
+    cyan = curses.color_pair(2)
+    yellow = curses.color_pair(3)
+    white = curses.color_pair(4)
+
+    centerRow = curses.LINES // 2
+    centerCol = curses.COLS // 2
+
+    boxTL = (centerRow - 4, centerCol - 15)
+    boxBR = (centerRow + 4, centerCol + 15)
+
+    if currentSide == 0:
+        color = cyan
+    else:
+        color = yellow
+
+    oldText = cardSet[currentCard][currentSide][:130]
+
+    cardString = cardSet[currentCard][currentSide][:130]
+    cardStringList = wrap(cardString, 27)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0], boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine + 1, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] + 1, boxTL[1], boxBR[0] + 1, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine + 2, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] + 2, boxTL[1], boxBR[0] + 2, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine + 4, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] + 4, boxTL[1], boxBR[0] + 4, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine + curses.LINES // 3 - 10, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] + curses.LINES // 3 - 10, boxTL[1], boxBR[0] + curses.LINES // 3 - 10, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    currentLine = -2
+    for i in cardStringList:
+        if currentLine <= 2:
+            stdscr.addstr(centerRow + currentLine + curses.LINES // 2 - 10, centerCol - len(i) // 2, i, color)
+            currentLine += 1
+    rectangle(stdscr, boxTL[0] + curses.LINES // 2 - 10, boxTL[1], boxBR[0] + curses.LINES // 2 - 10, boxBR[1])
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - curses.LINES // 2 + 10, boxTL[1] - 7, boxBR[0] - curses.LINES // 2 + 14, boxBR[1] + 7)
+    stdscr.addstr(boxTL[0] - curses.LINES // 2 + 10, boxTL[1] - 7, "                                              ")
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - 16, boxTL[1] - 7, boxBR[0] + 4, boxBR[1] + 7)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - 13, boxTL[1] - 7, boxBR[0] + 7, boxBR[1] + 7)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - 12, boxTL[1] - 7, boxBR[0] + 8, boxBR[1] + 7)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    for i in range(27):
+        if i % 3 == 1:
+            drawEditCard(stdscr, oldText, "")
+            j = 27 - i
+            for k in range(j):
+                stdscr.addstr(centerRow + 11 - k, boxTL[1] - 6, "                                           ")
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+    chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
+            "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "@", "#", 
+            "$", "%", "^", "&", "*", "-", "_", "=", "+", "<", ">", "~", ",",
+            ".", " "]
+
+    cardText = ""
+    while True:
+        drawEditCard(stdscr, oldText, cardText)
+        stdscr.refresh()
+        key = stdscr.getch()
+        char = chr(key)
+        if char in chars and len(cardText) < 130:
+            cardText += char
+        elif char == "\x7f":
+            cardText = cardText[:-1]
+        elif char == "\n":
+            if len(cardText) != 0:
+                cardSet[currentCard][currentSide] = str(cardText)
+                break
+        elif key == 27:
+            break
+
+    for i in range(27):
+        if i % 3 == 1:
+            drawEditCard(stdscr, oldText, "")
+            for j in range(i):
+                stdscr.addstr(centerRow + 11 - j, boxTL[1] - 6, "                                           ")
+            stdscr.refresh()
+            time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - 12, boxTL[1] - 7, boxBR[0] + 8, boxBR[1] + 7)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - 13, boxTL[1] - 7, boxBR[0] + 7, boxBR[1] + 7)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - 16, boxTL[1] - 7, boxBR[0] + 4, boxBR[1] + 7)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    rectangle(stdscr, boxTL[0] - curses.LINES // 2 + 10, boxTL[1] - 7, boxBR[0] - curses.LINES // 2 + 14, boxBR[1] + 7)
+    stdscr.addstr(boxTL[0] - curses.LINES // 2 + 10, boxTL[1] - 7, "                                              ")
+    drawHUD(stdscr)
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    stdscr.clear()
+    stdscr.refresh()
+    time.sleep(sleepAmount)
+
+    drawCardsScreen(stdscr, "move")
 
 # main function
 def main(stdscr):
@@ -1334,8 +1577,12 @@ def main(stdscr):
             flipCard(stdscr)
         elif key == ord(" "):
             createNewCard(stdscr)
+        elif key == ord("d"):
+            if currentCard < len(cardSet):
+                deleteCard(stdscr) 
         elif chr(key) == "\n":
-            pass
+            if currentCard < len(cardSet):
+                editCard(stdscr)
         elif key == 27:
             saveSet()
             call(["python", "ChooseMode.py"])

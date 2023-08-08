@@ -226,6 +226,20 @@ def selectItem(stdscr):
         call(["python", "ChooseMode.py"])
         exit()
 
+# screen too small function
+def screenTooSmall(stdscr):
+    magenta = curses.color_pair(1)
+    centerRow = curses.LINES // 2
+    centerCol = curses.COLS // 2
+
+    stdscr.clear()
+
+    text = "Screen size too small, please resize and retry"
+    stdscr.addstr(centerRow, centerCol - len(text) // 2, text,  magenta)
+
+    stdscr.refresh()
+    stdscr.getch()
+
 # main function
 def main(stdscr):
     curses.init_pair(1, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
@@ -237,6 +251,10 @@ def main(stdscr):
     cyan = curses.color_pair(2)
     yellow = curses.color_pair(3)
     white = curses.color_pair(4)
+
+    if curses.LINES < 59 and curses.COLS < 183:
+        screenTooSmall(stdscr)
+        sys.exit()
 
     centerRow = curses.LINES // 2
     centerCol = curses.COLS // 2
