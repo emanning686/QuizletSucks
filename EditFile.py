@@ -9,7 +9,6 @@ import time
 from textwrap import wrap
 
 # define variables
-
 sleepAmount = 0.083
 # sleepAmount = 1
 currentCard = 0
@@ -168,37 +167,25 @@ def drawCardsScreen(stdscr, action):
             stdscr.addstr(centerRow, centerCol - 15, "                              ", white)
             stdscr.addstr(centerRow + 1, centerCol - 15, "                              ", white)
             stdscr.addstr(centerRow + 2, centerCol - 15, "                              ", white)
-            rectangle(stdscr, boxTL[0] + 7, boxTL[1], boxBR[0], boxBR[1])
+            rectangle(stdscr, boxTL[0] + 6, boxTL[1], boxBR[0], boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
 
             stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 6, boxTL[1], boxBR[0] - 1, boxBR[1])
+            rectangle(stdscr, boxTL[0] + 5, boxTL[1], boxBR[0] - 1, boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
 
             stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 5, boxTL[1], boxBR[0] - 2, boxBR[1])
+            rectangle(stdscr, boxTL[0] + 3, boxTL[1], boxBR[0] - 3, boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
 
             stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 3, boxTL[1], boxBR[0] - 4, boxBR[1])
-            drawHUD(stdscr)
-            stdscr.refresh()
-            time.sleep(sleepAmount)
-
-            stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 1, boxTL[1], boxBR[0] - 6, boxBR[1])
-            drawHUD(stdscr)
-            stdscr.refresh()
-            time.sleep(sleepAmount)
-
-            stdscr.clear()
-            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0] - 7, boxBR[1])
+            rectangle(stdscr, boxTL[0] + 1, boxTL[1], boxBR[0] - 5, boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
@@ -308,37 +295,25 @@ def drawCardsScreen(stdscr, action):
             stdscr.addstr(centerRow, centerCol - 15, "                              ", white)
             stdscr.addstr(centerRow + 1, centerCol - 15, "                              ", white)
             stdscr.addstr(centerRow + 2, centerCol - 15, "                              ", white)
-            rectangle(stdscr, boxTL[0] + 7, boxTL[1], boxBR[0], boxBR[1])
+            rectangle(stdscr, boxTL[0] + 6, boxTL[1], boxBR[0], boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
 
             stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 6, boxTL[1], boxBR[0] - 1, boxBR[1])
+            rectangle(stdscr, boxTL[0] + 5, boxTL[1], boxBR[0] - 1, boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
 
             stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 5, boxTL[1], boxBR[0] - 2, boxBR[1])
+            rectangle(stdscr, boxTL[0] + 3, boxTL[1], boxBR[0] - 3, boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
 
             stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 3, boxTL[1], boxBR[0] - 4, boxBR[1])
-            drawHUD(stdscr)
-            stdscr.refresh()
-            time.sleep(sleepAmount)
-
-            stdscr.clear()
-            rectangle(stdscr, boxTL[0] + 1, boxTL[1], boxBR[0] - 6, boxBR[1])
-            drawHUD(stdscr)
-            stdscr.refresh()
-            time.sleep(sleepAmount)
-
-            stdscr.clear()
-            rectangle(stdscr, boxTL[0], boxTL[1], boxBR[0] - 7, boxBR[1])
+            rectangle(stdscr, boxTL[0] + 1, boxTL[1], boxBR[0] - 5, boxBR[1])
             drawHUD(stdscr)
             stdscr.refresh()
             time.sleep(sleepAmount)
@@ -1189,7 +1164,7 @@ def createNewCard(stdscr):
         char = chr(key)
         if char in chars and len(cardFront) < 130:
             cardFront += char
-        elif char == "\x7f":
+        elif char == "\x7f" or char == "\b":
             cardFront = cardFront[:-1]
         elif char == "\n":
             if len(cardFront) != 0:
@@ -1205,7 +1180,7 @@ def createNewCard(stdscr):
             char = chr(key)
             if char in chars and len(cardBack) < 130:
                 cardBack += char
-            elif char == "\x7f":
+            elif char == "\x7f" or char == "\b":
                 cardBack = cardBack[:-1]
             elif char == "\n":
                 if len(cardBack) != 0:
@@ -1507,7 +1482,7 @@ def editCard(stdscr):
         char = chr(key)
         if char in chars and len(cardText) < 130:
             cardText += char
-        elif char == "\x7f":
+        elif char == "\x7f" or char == "\b":
             cardText = cardText[:-1]
         elif char == "\n":
             if len(cardText) != 0:
