@@ -69,19 +69,12 @@ def moveCursor(dir):
 
 # select item function
 def selectItem():
-    if selected == 1:
-        call(["python", "Practice.py"])
-        exit()
-    elif selected == 2:
-        call(["python", "EditFile.py"])
-    elif selected == 3:
+    if selected == 3:
         os.remove(f"Sets/{homeFileName}")
         file = open("CurrentSet.txt", "w")
         file.close()
-        call(["python", "QuizletSucks.py"])
-        exit()
 
-
+# main function
 def main(stdscr):
     curses.init_pair(1, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
@@ -93,6 +86,8 @@ def main(stdscr):
     yellow = curses.color_pair(3)
     white = curses.color_pair(4)
 
+    exitFile = False
+
     while True:
         drawOptionsMenu(stdscr)
         key = stdscr.getch()
@@ -102,7 +97,16 @@ def main(stdscr):
             moveCursor("down")
         elif chr(key) == "\n":
             selectItem()
+            break
         elif key == 27:
-            call(["python", "QuizletSucks.py"])
+            exitFile = True
+            break
+
+    if exitFile or selected == 3:
+        call(["python", "QuizletSucks.py"])
+    elif selected == 1:
+        call(["python", "Practice.py"])
+    elif selected == 2:
+        call(["python", "EditFile.py"])
 
 wrapper(main)

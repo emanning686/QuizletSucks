@@ -1560,6 +1560,8 @@ def main(stdscr):
                 editCard(stdscr)
         elif key == 27:
             saveSet()
-            call(["python", "ChooseMode.py"])
+            break
+
+    call(["python", "ChooseMode.py"])
 
 wrapper(main)

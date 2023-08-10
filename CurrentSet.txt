@@ -1,6 +1,1 @@
-nice.txt
-test card 1|back of test card 1
-test card 2|this is the back of test card 2, hopefully this one works, fingers crossed
-card number 3, going good|back of test card 3
-test card 4|this is the final test card, hopefully all went well and I dont have to write some bs like this again 
-testerino card 5|so i needed another test card, this is the back of the 5th btw in case they ever get scrambles, here goes nothing
+ballsHD.txt

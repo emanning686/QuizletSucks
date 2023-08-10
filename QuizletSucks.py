@@ -189,30 +189,31 @@ def drawCNFMenu(stdscr, fileName):
 
 # select item function
 def selectItem(stdscr):
-    chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
+    if selected == 7:
+        chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
             "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "@", "#", 
             "$", "%", "^", "&", "*", "-", "_", "=", "+", "<", ">", "~", " "]
-    
-    if selected == 7:
         fileName = ""
+
         while True:
             drawCNFMenu(stdscr, fileName)
             key = stdscr.getch()
             char = chr(key)
             if char in chars and len(fileName) < 30:
                 fileName += char
-            elif char == "\x7f":
+            elif char == "\x7f" or char == "\b":
                 fileName = fileName[:-1]
             elif char == "\n":
                 f = open(f"Sets/{fileName}.txt", "x")
                 f.close()
                 updateFileList()
-                break
+                return "newFile"
             elif key == 27:
                 break
+
     else:
         setFileLines = []
         fileName = f"{fileList[page - 1][selected - 1]}.txt"
@@ -223,8 +224,6 @@ def selectItem(stdscr):
             file.write(f"{fileName}\n")
             for line in setFileLines:
                 file.write(line)
-        call(["python", "ChooseMode.py"])
-        exit()
 
 # screen too small function
 def screenTooSmall(stdscr):
@@ -279,7 +278,7 @@ def main(stdscr):
     text = "    `--`--'' `--`--`..---'  `--`-` `--`.-.--`--`-----'`--`-----``       `--`--`   "
     stdscr.addstr(centerRow + 4, centerCol - len(text) // 2, text, magenta)
     stdscr.refresh()
-    time.sleep(1)
+    time.sleep(0.5)
     stdscr.clear()
     text = "   ,-,--.                _,.----.  ,--.-.,-.    ,-,--.  "
     stdscr.addstr(centerRow - 4, centerCol - len(text) // 2, text, magenta)
@@ -300,7 +299,7 @@ def main(stdscr):
     text = " `--`---' `--`..---'               `--`       `--`---'  "
     stdscr.addstr(centerRow + 4, centerCol - len(text) // 2, text, magenta)
     stdscr.refresh()
-    time.sleep(1)
+    time.sleep(0.5)
 
     updateFileList()
 
@@ -316,8 +315,12 @@ def main(stdscr):
         elif key == curses.KEY_RIGHT:
             moveCursor("right") 
         elif chr(key) == "\n":
-            selectItem(stdscr)
+            createFile = selectItem(stdscr)
+            if createFile != "newFile":
+                break
         elif key == 27:
             sys.exit()
+
+    call(["python", "ChooseMode.py"])
 
 wrapper(main)
