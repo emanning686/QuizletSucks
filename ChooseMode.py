@@ -102,11 +102,11 @@ def main(stdscr):
             exitFile = True
             break
 
-    if exitFile or selected == 3:
-        call(["python", "QuizletSucks.py"])
-    elif selected == 1:
+    if selected == 1 and not exitFile:
         call(["python", "Practice.py"])
-    elif selected == 2:
+    elif selected == 2 and not exitFile:
         call(["python", "EditFile.py"])
+    elif selected == 3 or exitFile:
+        call(["python", "QuizletSucks.py"])
 
 wrapper(main)

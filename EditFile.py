@@ -9,7 +9,7 @@ import time
 from textwrap import wrap
 
 # define variables
-sleepAmount = 0.083
+sleepAmount = 0.083 / 2
 # sleepAmount = 1
 currentCard = 0
 displayedCard = 0
@@ -1522,6 +1522,7 @@ def editCard(stdscr):
     time.sleep(sleepAmount)
 
     stdscr.clear()
+    drawHUD(stdscr)
     stdscr.refresh()
     time.sleep(sleepAmount)
 
