@@ -81,11 +81,6 @@ def main(stdscr):
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
-    magenta = curses.color_pair(1)
-    cyan = curses.color_pair(2)
-    yellow = curses.color_pair(3)
-    white = curses.color_pair(4)
-
     exitFile = False
 
     while True:

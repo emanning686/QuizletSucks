@@ -1,5 +1,5 @@
 # edit file menu
-# created aug 7, 2023
+# created Aug 7, 2023
 
 import curses
 from curses import wrapper
