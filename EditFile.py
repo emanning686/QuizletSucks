@@ -11,9 +11,11 @@ from textwrap import wrap
 # define variables
 sleepAmount = 0.083 / 2
 # sleepAmount = 1
+
 currentCard = 0
 displayedCard = 0
 currentSide = 0
+
 textList1 = []
 textList2 = []
 
@@ -679,13 +681,13 @@ def drawCardsScreen(stdscr, action):
         textList2 = list(newTextList2)
 
 # move card funciton
-def moveCard(stdscr, dir):
+def moveCard(stdscr, direction):
     global currentCard
 
-    if dir == "left" and currentCard > 0:
+    if direction == "left" and currentCard > 0:
         currentCard -= 1
         drawCardsScreen(stdscr, "move")
-    elif dir == "right" and currentCard < len(cardSet):
+    elif direction == "right" and currentCard < len(cardSet):
         currentCard += 1
         drawCardsScreen(stdscr, "move")
 
@@ -1150,10 +1152,10 @@ def createNewCard(stdscr):
     chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
             "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "@", "#", 
-            "$", "%", "^", "&", "*", "-", "_", "=", "+", "<", ">", "~", ",",
-            ".", " "]
+            "$", "%", "^", "&", "*", "-", "_", "=", "+", "<", ">", "~", ",", 
+            " "]
 
     cardFront = ""
     cardBack = ""
@@ -1359,15 +1361,15 @@ def editCard(stdscr):
     boxTL = (centerRow - 4, centerCol - 15)
     boxBR = (centerRow + 4, centerCol + 15)
 
-    if currentSide == 0:
-        color = cyan
-    else:
-        color = yellow
-
     oldText = cardSet[currentCard][currentSide][:130]
 
     cardString = cardSet[currentCard][currentSide][:130]
     cardStringList = wrap(cardString, 27)
+
+    if currentSide == 0:
+        color = cyan
+    else:
+        color = yellow
 
     stdscr.clear()
     currentLine = -2

@@ -15,7 +15,7 @@ def updateFileList():
     fileList = []
     tempFileList = os.listdir("Sets/")
     for index, file in enumerate(tempFileList):
-        if file[len(file) - 3:] != "txt":
+        if file[len(file) - 3:] != "txt" or file[len(file) - 7:] == ".fc.txt":
             tempFileList.pop(index)
     for index, file in enumerate(tempFileList):
         tempFileList[index] = file[:-4]
@@ -207,8 +207,11 @@ def selectItem(stdscr):
             elif char == "\x7f" or char == "\b":
                 fileName = fileName[:-1]
             elif char == "\n":
-                f = open(f"Sets/{fileName}.txt", "x")
-                f.close()
+                try:
+                    f = open(f"Sets/{fileName}.txt", "x")
+                    f.close()
+                except FileExistsError:
+                    pass
                 updateFileList()
                 return "newFile"
             elif key == 27:

@@ -104,6 +104,6 @@ def main(stdscr):
     elif selected == 3 and not exitFile:
         pass
     elif exitFile:
-        call(["python", "QuizletSucks.py"])
+        call(["python", "ChooseMode.py"])
 
 wrapper(main)
