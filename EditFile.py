@@ -396,7 +396,7 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in cardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol - 3  - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol - 3 - len(i) // 2, i, color)
                     currentLine += 1
             rectangle(stdscr, boxTL[0], boxTL[1] - 3, boxBR[0], boxBR[1] - 3)
             drawHUD(stdscr)
@@ -407,7 +407,7 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in cardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol - 6  - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol - 6 - len(i) // 2, i, color)
                     currentLine += 1
             rectangle(stdscr, boxTL[0], boxTL[1] - 6, boxBR[0], boxBR[1] - 6)
             for i in range(7):
@@ -416,7 +416,7 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in newCardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol + 12  - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol + 12 - len(i) // 2, i, color)
                     currentLine += 1
             rectangle(stdscr, boxTL[0], boxTL[1] + 12, boxBR[0], boxBR[1] + 12)
             drawHUD(stdscr)
@@ -427,7 +427,7 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in cardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol - 12  - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol - 12 - len(i) // 2, i, color)
                     currentLine += 1
             rectangle(stdscr, boxTL[0], boxTL[1] - 12, boxBR[0], boxBR[1] - 12)
             for i in range(7):
@@ -436,7 +436,7 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in newCardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol + 6  - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol + 6 - len(i) // 2, i, color)
                     currentLine += 1
             rectangle(stdscr, boxTL[0], boxTL[1] + 6, boxBR[0], boxBR[1] + 6)
             drawHUD(stdscr)
@@ -447,7 +447,7 @@ def drawCardsScreen(stdscr, action):
             currentLine = -2
             for i in newCardSides[currentSide]:
                 if currentLine <= 2:
-                    stdscr.addstr(centerRow + currentLine, centerCol + 3  - len(i) // 2, i, color)
+                    stdscr.addstr(centerRow + currentLine, centerCol + 3 - len(i) // 2, i, color)
                     currentLine += 1
             rectangle(stdscr, boxTL[0], boxTL[1] + 3, boxBR[0], boxBR[1] + 3)
 
