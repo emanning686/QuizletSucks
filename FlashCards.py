@@ -66,10 +66,12 @@ def createCardSet():
         if len(cardSet) == 0:
             cardSet = list(defaultCardSet)
 
+# save card set function
 def saveCardSet():
     with open(f"Sets/{fcHomeFileName}", "w") as file:
-            for card in dontKnowPile:
-                file.write(f"{cardSet[card][0]}|{cardSet[card][1]}\n")
+            for index, card in enumerate(cardSet):
+                if index not in knowPile:
+                    file.write(f"{cardSet[index][0]}|{cardSet[index][1]}\n")
 
 # draw hud function
 def drawHUD(stdscr):
@@ -888,7 +890,7 @@ def main(stdscr):
             elif key == ord("u"):
                 undoCard(stdscr)
             elif key == 27:
-                createCardSet()
+                saveCardSet()
                 break
         else:
             break
