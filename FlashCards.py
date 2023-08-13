@@ -885,7 +885,7 @@ def main(stdscr):
                 moveCard(stdscr, "left")
             elif key == curses.KEY_RIGHT:
                 moveCard(stdscr, "right")
-            elif key == curses.KEY_UP or key == curses.KEY_DOWN or key == ord("f"):
+            elif key == curses.KEY_UP or key == curses.KEY_DOWN or key == ord(" "):
                 flipCard(stdscr)
             elif key == ord("u"):
                 undoCard(stdscr)
