@@ -8,9 +8,12 @@ from subprocess import call
 import os
 
 # define variables
-cardSet = {}
+cardSet = []
 with open("CurrentSet.txt", "r") as file:
     homeFileName = file.readline().replace("\n", "")
+    for line in file:
+        card = line.replace("\n", "").split("|")
+        cardSet.append(card)
 
 selected = 1
 
