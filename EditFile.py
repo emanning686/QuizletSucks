@@ -43,7 +43,7 @@ def saveSet():
             file.write(f"{i[0]}|{i[1]}\n")
     with open(fileLoc, "r") as file:
         for line in file:
-                setFileLines.append(line)
+            setFileLines.append(line)
     with open("CurrentSet.txt", "w") as file:
         file.write(f"{homeFileName}\n")
         for line in setFileLines:
